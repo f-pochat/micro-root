@@ -1,0 +1,33 @@
+version: '2.0'
+
+networks:
+  network:
+
+services:
+  home:
+    image: ghcr.io/f-pochat/micro-home:master
+    ports:
+      - "3000:8080"
+    stdin_open: true
+    networks:
+      - network
+
+  list:
+    image: ghcr.io/f-pochat/micro-list:master
+    ports:
+      - "3001:8080"
+    stdin_open: true
+    networks:
+      - network
+
+  nginx:
+    image: nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - home
+      - list
+    networks:
+      - network
